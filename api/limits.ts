@@ -20,7 +20,6 @@ import {
   getRelayerFeeDetails,
   getCachedTokenPrice,
   getTokenDetails,
-  getCachedTokenBalance,
   maxBN,
   minBN,
   isRouteEnabled,
@@ -31,6 +30,7 @@ import {
   getProvider,
   HUB_POOL_CHAIN_ID,
   ENABLED_ROUTES,
+  getCachedBalance,
   getDefaultRelayerAddress,
   sendResponse,
 } from "./_utils";
@@ -165,19 +165,19 @@ const handler = async (
       hubPool.callStatic.multicall(multicallInput, { blockTag: BLOCK_TAG_LAG }),
       Promise.all(
         fullRelayers.map((relayer) =>
-          getCachedTokenBalance(destinationChainId!, relayer, destinationToken)
+          getCachedBalance(destinationChainId!, destinationToken, relayer)
         )
       ),
       Promise.all(
         transferRestrictedRelayers.map((relayer) =>
-          getCachedTokenBalance(destinationChainId!, relayer, destinationToken)
+          getCachedBalance(destinationChainId!, destinationToken, relayer)
         )
       ),
       Promise.all(
         fullRelayers.map((relayer) =>
           destinationChainId === "1"
             ? ethers.BigNumber.from("0")
-            : getCachedTokenBalance("1", relayer, l1Token)
+            : getCachedBalance("1", l1Token, relayer)
         )
       ),
     ]);
