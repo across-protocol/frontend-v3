@@ -2,6 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { ChainId, getTokenByAddress } from "utils/constants";
 import { SuggestedApiFeeReturnType } from "../types";
 import { parseUnits } from "utils/format";
+import { utils } from "@across-protocol/sdk-v2";
 
 /**
  * Creates a mocked variant of the suggestedAPI Call
@@ -23,23 +24,23 @@ export async function suggestedFeesMockedApiCall(
 
   return {
     totalRelayFee: {
-      pct: BigNumber.from("1"),
-      total: parseUnits("0.5", decimals),
+      pct: parseUnits("0.1", 18),
+      total: parseUnits("0.1", decimals),
     },
     relayerCapitalFee: {
-      pct: BigNumber.from("1"),
-      total: parseUnits("0.5", decimals),
+      pct: parseUnits("0.1", 18),
+      total: parseUnits("0.01", decimals),
     },
     relayerGasFee: {
-      pct: BigNumber.from("1"),
-      total: parseUnits("0.5", decimals),
+      pct: parseUnits("0.1", 18),
+      total: parseUnits("0.1", decimals),
     },
     lpFee: {
-      pct: BigNumber.from("1"),
-      total: parseUnits("0.5", decimals),
+      pct: parseUnits("0.1", 18),
+      total: parseUnits("0.1", decimals),
     },
     isAmountTooLow: false,
     quoteBlock: BigNumber.from("1"),
-    quoteTimestamp: BigNumber.from("1"),
+    quoteTimestamp: BigNumber.from(utils.getCurrentTime()),
   };
 }

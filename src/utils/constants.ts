@@ -21,6 +21,7 @@ import umaLogo from "assets/uma.svg";
 import acxLogo from "assets/across.svg";
 import balLogo from "assets/bal.svg";
 import usdtLogo from "assets/usdt-logo.svg";
+import espressoLogo from "assets/espresso-logo.svg";
 import snxLogo from "assets/snx-logo.svg";
 import pooltogetherLogo from "assets/pooltogether-logo.svg";
 import unknownLogo from "assets/icons/question-24.svg";
@@ -241,28 +242,28 @@ export const chainInfoList: ChainInfoList = [
     customRpcUrl: process.env.REACT_APP_CHAIN_84531_PROVIDER_URL,
   },
   {
-    name: "Sepolia",
-    fullName: "Sepolia",
+    name: "Espresso Rollup A",
+    fullName: "Espresso Rollup A",
     chainId: ChainId.SEPOLIA,
-    logoURI: ethereumLogo,
+    logoURI: espressoLogo,
     rpcUrl: "https://gateway.tenderly.co/public/sepolia	",
-    explorerUrl: "https://sepolia.etherscan.io/",
+    explorerUrl: "https://espresso.xyz/bridge/",
     constructExplorerLink: defaultConstructExplorerLink(
-      "https://sepolia.etherscan.io/"
+      "https://espresso.xyz/bridge/"
     ),
     nativeCurrencySymbol: "ETH",
     pollingInterval: defaultBlockPollingInterval,
     customRpcUrl: process.env.REACT_APP_CHAIN_11155111_PROVIDER_URL,
   },
   {
-    name: "Base Sepolia",
-    fullName: "Base Testnet Sepolia",
+    name: "Espresso Rollup B",
+    fullName: "Espresso Rollup B",
     chainId: ChainId.BASE_SEPOLIA,
-    logoURI: baseLogo,
+    logoURI: espressoLogo,
     rpcUrl: "https://sepolia.base.org",
-    explorerUrl: "https://base-sepolia.blockscout.com/",
+    explorerUrl: "https://espresso.xyz/bridge/",
     constructExplorerLink: defaultConstructExplorerLink(
-      "https://base-sepolia.blockscout.com/"
+      "https://espresso.xyz/bridge/"
     ),
     nativeCurrencySymbol: "ETH",
     pollingInterval: defaultBlockPollingInterval,
@@ -519,10 +520,6 @@ export const tokenTable = Object.fromEntries(
 
 export const getToken = (symbol: string): TokenInfo => {
   const token = tokenTable[symbol.toUpperCase()];
-  console.log("token", token);
-  console.log("symbol", symbol);
-  console.log("tokenSymbol", tokenTable);
-  console.log(TOKEN_SYMBOLS_MAP);
   assert(token, "No token found for symbol: " + symbol);
   return token;
 };

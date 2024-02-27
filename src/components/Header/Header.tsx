@@ -14,8 +14,10 @@ import {
 import MenuToggle from "./MenuToggle";
 import { enableMigration } from "utils";
 import { ReactComponent as Logo } from "assets/across-mobile-logo.svg";
+import { ReactComponent as EspressoLogo } from "assets/espresso-logo.svg";
 import useScrollPosition from "hooks/useScrollPosition";
 import { isChildPath } from "./utils";
+import styled from "@emotion/styled";
 
 const LINKS = !enableMigration
   ? [
@@ -50,12 +52,15 @@ const Header: React.FC<Props> = ({
       scrollPosition={scrollPosition}
       data-cy="primary-header"
     >
-      <UnstyledLink
-        to={{ pathname: "/", search: location.search }}
-        style={{ display: "flex" }}
-      >
-        <Logo />
-      </UnstyledLink>
+      <LinkWrapper>
+        <UnstyledLink
+          to={{ pathname: "/", search: location.search }}
+          style={{ display: "flex" }}
+        >
+          <Logo />
+        </UnstyledLink>
+        <EspressoLogoStyled />
+      </LinkWrapper>
       <Navigation>
         <List>
           {LINKS.map(({ href, name }) => (
@@ -87,3 +92,15 @@ const Header: React.FC<Props> = ({
 };
 
 export default Header;
+
+const LinkWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  flex-shrink: 0;
+`;
+
+const EspressoLogoStyled = styled(EspressoLogo)`
+  height: 32px;
+  width: auto;
+`;
