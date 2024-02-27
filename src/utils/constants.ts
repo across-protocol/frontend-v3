@@ -90,9 +90,7 @@ export type ChainInfoTable = Record<number, ChainInfo>;
 
 export const defaultBlockPollingInterval =
   Number(process.env.REACT_APP_DEFAULT_BLOCK_POLLING_INTERVAL_S || 15) * 1000;
-export const hubPoolChainId = Number(
-  process.env.REACT_APP_HUBPOOL_CHAINID || 1
-);
+export const hubPoolChainId = Number(11155111);
 
 const defaultConstructExplorerLink =
   (explorerUrl: string) => (txHash: string) =>
@@ -364,7 +362,9 @@ export const tokenList = [
         logoURI,
         symbol,
         displaySymbol: symbol,
-        mainnetAddress: usdcTokenInfo.addresses[hubPoolChainId],
+        mainnetAddress:
+          usdcTokenInfo.addresses[hubPoolChainId] ??
+          usdcTokenInfo.addresses[CHAIN_IDs.MAINNET],
       };
     }
 
@@ -378,7 +378,9 @@ export const tokenList = [
     return {
       ...tokenInfo,
       logoURI,
-      mainnetAddress: tokenInfo.addresses[hubPoolChainId],
+      mainnetAddress:
+        tokenInfo.addresses[hubPoolChainId] ??
+        tokenInfo.addresses[CHAIN_IDs.MAINNET],
     };
   }),
   ...externalLPsForStaking[hubPoolChainId],
@@ -517,6 +519,10 @@ export const tokenTable = Object.fromEntries(
 
 export const getToken = (symbol: string): TokenInfo => {
   const token = tokenTable[symbol.toUpperCase()];
+  console.log("token", token);
+  console.log("symbol", symbol);
+  console.log("tokenSymbol", tokenTable);
+  console.log(TOKEN_SYMBOLS_MAP);
   assert(token, "No token found for symbol: " + symbol);
   return token;
 };
