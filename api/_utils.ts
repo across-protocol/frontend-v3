@@ -41,7 +41,6 @@ import { PoolStateResult } from "./_types";
 type LoggingUtility = sdk.relayFeeCalculator.Logger;
 
 const {
-  REACT_APP_HUBPOOL_CHAINID,
   REACT_APP_PUBLIC_INFURA_ID,
   REACT_APP_COINGECKO_PRO_API_KEY,
   GOOGLE_SERVICE_ACCOUNT: _GOOGLE_SERVICE_ACCOUNT,
@@ -59,7 +58,7 @@ export const gasMarkup = GAS_MARKUP ? JSON.parse(GAS_MARKUP) : {};
 export const DEFAULT_GAS_MARKUP = 0;
 
 // Don't permit HUB_POOL_CHAIN_ID=0
-export const HUB_POOL_CHAIN_ID = Number(REACT_APP_HUBPOOL_CHAINID || 1);
+export const HUB_POOL_CHAIN_ID = Number(11155111);
 
 // Tokens that should be disabled in the routes
 export const DISABLED_ROUTE_TOKENS = (
