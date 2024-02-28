@@ -98,7 +98,8 @@ export async function getFillByDepositTxHash(
       undefined,
       undefined,
       depositor
-    )
+    ),
+    -3000
   );
 
   const v3FilledRelayEvents = await destinationSpokePool.queryFilter(
