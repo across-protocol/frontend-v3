@@ -1,9 +1,8 @@
 import { useQuery } from "react-query";
 import { useState } from "react";
 
-import { useAmplitude, useConnection } from "hooks";
+import { useConnection } from "hooks";
 import {
-  generateDepositConfirmed,
   getToken,
   recordTransferUserProperties,
   wait,
@@ -16,8 +15,6 @@ import {
   addLocalDeposit,
   removeLocalDeposits,
 } from "utils/local-deposits";
-import { ampli } from "ampli";
-
 import { convertForDepositQuery, convertForFillQuery } from "../utils";
 import { FromBridgePagePayload } from "../types";
 
@@ -29,14 +26,13 @@ export function useDepositTracking(
 ) {
   const [shouldRetryDepositQuery, setShouldRetryDepositQuery] = useState(true);
 
-  const { addToAmpliQueue } = useAmplitude();
   const { account } = useConnection();
 
   const depositQuery = useQuery(
     ["deposit", depositTxHash, fromChainId, account],
     async () => {
       // On some L2s the tx is mined too fast for the animation to show, so we add a delay
-      await wait(1_000);
+      await wait(3_000);
 
       try {
         const deposit = await getDepositByTxHash(depositTxHash, fromChainId);
@@ -69,19 +65,6 @@ export function useDepositTracking(
         if (account !== fromBridgePagePayload.account) {
           return;
         }
-
-        addToAmpliQueue(() => {
-          ampli.transferDepositCompleted(
-            generateDepositConfirmed(
-              fromBridgePagePayload.quote,
-              fromBridgePagePayload.referrer,
-              fromBridgePagePayload.timeSigned,
-              data.depositTxReceipt.transactionHash,
-              true,
-              data.depositTimestamp
-            )
-          );
-        });
       },
     }
   );
@@ -94,6 +77,8 @@ export function useDepositTracking(
           `Could not fetch deposit by tx hash ${depositTxHash} on chain ${fromChainId}`
         );
       }
+
+      await wait(6000);
 
       return getFillByDepositTxHash(
         depositTxHash,
