@@ -399,6 +399,14 @@ const enabledRoutes = {
         toChains: [
           {
             chainId: CHAIN_IDs.BASE_SEPOLIA,
+            tokens: ["WETH", "USDC"],
+          },
+          {
+            chainId: CHAIN_IDs.OPTIMISM_SEPOLIA,
+            tokens: ["WETH", "USDC"],
+          },
+          {
+            chainId: CHAIN_IDs.ARBITRUM_SEPOLIA,
             tokens: ["WETH"],
           },
         ],
@@ -406,6 +414,38 @@ const enabledRoutes = {
       {
         fromChain: CHAIN_IDs.BASE_SEPOLIA,
         fromSpokeAddress: "0x82B564983aE7274c86695917BBf8C99ECb6F0F8F",
+        toChains: [
+          {
+            chainId: CHAIN_IDs.SEPOLIA,
+            tokens: ["WETH", "USDC"],
+          },
+        ],
+      },
+      {
+        fromChain: CHAIN_IDs.OPTIMISM_SEPOLIA,
+        fromSpokeAddress: getDeployedAddress(
+          "SpokePool",
+          CHAIN_IDs.OPTIMISM_SEPOLIA
+        ),
+        toChains: [
+          {
+            chainId: CHAIN_IDs.SEPOLIA,
+            tokens: [
+              "WETH",
+              {
+                symbol: "USDC",
+                fromAddress: "0x5fd84259d66Cd46123540766Be93DFE6D43130D7",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        fromChain: CHAIN_IDs.ARBITRUM_SEPOLIA,
+        fromSpokeAddress: getDeployedAddress(
+          "SpokePool",
+          CHAIN_IDs.ARBITRUM_SEPOLIA
+        ),
         toChains: [
           {
             chainId: CHAIN_IDs.SEPOLIA,
@@ -438,19 +478,33 @@ function generateRoutes(hubPoolChainId = 1) {
     routes: config.routes.flatMap((route) => {
       return route.toChains.flatMap((toChain) => {
         return toChain.tokens.map((token) => {
+          const tokenSymbol = typeof token === "string" ? token : token.symbol;
+          const fromTokenAddress =
+            typeof token === "string"
+              ? TOKEN_SYMBOLS_MAP[token].addresses[route.fromChain]
+              : token.fromAddress;
+          const l1TokenAddress =
+            TOKEN_SYMBOLS_MAP[tokenSymbol].addresses[hubPoolChainId];
+
+          if (!fromTokenAddress || !l1TokenAddress) {
+            throw new Error(
+              `${tokenSymbol} not found on chain ${
+                !fromTokenAddress ? route.fromChain : hubPoolChainId
+              } in TOKEN_SYMBOLS_MAP`
+            );
+          }
+
           return {
             fromChain: route.fromChain,
             toChain: toChain.chainId,
-            fromTokenAddress: utils.getAddress(
-              TOKEN_SYMBOLS_MAP[token].addresses[route.fromChain]
-            ),
+            fromTokenAddress: utils.getAddress(fromTokenAddress),
             fromSpokeAddress: utils.getAddress(route.fromSpokeAddress),
             fromTokenSymbol:
-              token === "USDC" ? getUsdcSymbol(route.fromChain) : token,
-            isNative: token === TOKEN_SYMBOLS_MAP.ETH.symbol,
-            l1TokenAddress: utils.getAddress(
-              TOKEN_SYMBOLS_MAP[token].addresses[hubPoolChainId]
-            ),
+              tokenSymbol === "USDC"
+                ? getUsdcSymbol(route.fromChain)
+                : tokenSymbol,
+            isNative: tokenSymbol === TOKEN_SYMBOLS_MAP.ETH.symbol,
+            l1TokenAddress: utils.getAddress(l1TokenAddress),
           };
         });
       });

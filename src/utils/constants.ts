@@ -45,6 +45,8 @@ export enum ChainId {
   MUMBAI = CHAIN_IDs.MUMBAI,
   SEPOLIA = CHAIN_IDs.SEPOLIA,
   BASE_SEPOLIA = CHAIN_IDs.BASE_SEPOLIA,
+  OPTIMISM_SEPOLIA = CHAIN_IDs.OPTIMISM_SEPOLIA,
+  ARBITRUM_SEPOLIA = CHAIN_IDs.ARBITRUM_SEPOLIA,
 }
 
 // Maps `ChainId` to an object and inverts the Key/Value
@@ -208,7 +210,7 @@ export const chainInfoList: ChainInfoList = [
     rpcUrl: "https://gateway.tenderly.co/public/sepolia	",
     explorerUrl: "https://sepolia.etherscan.io/",
     constructExplorerLink: defaultConstructExplorerLink(
-      "https://sepolia.etherscan.io/"
+      "https://sepolia.etherscan.io"
     ),
     nativeCurrencySymbol: "ETH",
     pollingInterval: defaultBlockPollingInterval,
@@ -220,13 +222,41 @@ export const chainInfoList: ChainInfoList = [
     chainId: ChainId.BASE_SEPOLIA,
     logoURI: baseLogo,
     rpcUrl: "https://sepolia.base.org",
-    explorerUrl: "https://base-sepolia.blockscout.com/",
+    explorerUrl: "https://base-sepolia.blockscout.com",
     constructExplorerLink: defaultConstructExplorerLink(
-      "https://base-sepolia.blockscout.com/"
+      "https://base-sepolia.blockscout.com"
     ),
     nativeCurrencySymbol: "ETH",
     pollingInterval: defaultBlockPollingInterval,
     customRpcUrl: process.env.REACT_APP_CHAIN_84532_PROVIDER_URL,
+  },
+  {
+    name: "Optimism Sepolia",
+    fullName: "Optimism Testnet Sepolia",
+    chainId: ChainId.OPTIMISM_SEPOLIA,
+    logoURI: optimismLogo,
+    rpcUrl: "https://sepolia.optimism.io",
+    explorerUrl: "https://sepolia-optimistic.etherscan.io",
+    constructExplorerLink: defaultConstructExplorerLink(
+      "https://sepolia-optimistic.etherscan.io"
+    ),
+    nativeCurrencySymbol: "ETH",
+    pollingInterval: defaultBlockPollingInterval,
+    customRpcUrl: process.env.REACT_APP_CHAIN_11155420_PROVIDER_URL,
+  },
+  {
+    name: "Arbitrum Sepolia",
+    fullName: "Arbitrum Testnet Sepolia",
+    chainId: ChainId.ARBITRUM_SEPOLIA,
+    logoURI: arbitrumLogo,
+    rpcUrl: "https://sepolia.arbiscan.io",
+    explorerUrl: "https://sepolia.arbiscan.io",
+    constructExplorerLink: defaultConstructExplorerLink(
+      "https://sepolia.arbiscan.io"
+    ),
+    nativeCurrencySymbol: "ETH",
+    pollingInterval: defaultBlockPollingInterval,
+    customRpcUrl: process.env.REACT_APP_CHAIN_421614_PROVIDER_URL,
   },
 ];
 

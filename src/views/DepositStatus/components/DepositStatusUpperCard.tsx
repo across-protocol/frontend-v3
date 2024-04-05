@@ -35,6 +35,8 @@ const grayscaleLogos: Record<number, React.ReactNode> = {
   [ChainId.SEPOLIA]: <EthereumGrayscaleLogo />,
   [ChainId.MUMBAI]: <EthereumGrayscaleLogo />,
   [ChainId.BASE_SEPOLIA]: <BaseGrayscaleLogo />,
+  [ChainId.OPTIMISM_SEPOLIA]: <OptimismGrayscaleLogo />,
+  [ChainId.ARBITRUM_SEPOLIA]: <ArbitrumGrayscaleLogo />,
 };
 
 type Props = {
