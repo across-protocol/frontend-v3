@@ -230,7 +230,7 @@ export async function sendDepositTx(
     tokenAddress,
     amount,
     destinationChainId,
-    relayerFeePct,
+    ethers.BigNumber.from("0"),
     quoteTimestamp,
     message,
     maxCount,
