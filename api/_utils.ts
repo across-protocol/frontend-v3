@@ -39,6 +39,7 @@ import {
   BLOCK_TAG_LAG,
   defaultRelayerAddressOverride,
   defaultRelayerAddressOverridePerToken,
+  defaultRelayerAddressOverridePerChain,
   disabledL1Tokens,
   DOMAIN_CALLDATA_DELIMITER,
   graphAPIKey,
@@ -692,10 +693,8 @@ export const getSpokePool = (_chainId: number): SpokePool => {
 
 export const getSpokePoolAddress = (chainId: number): string => {
   switch (chainId) {
-    case CHAIN_IDs.MODE_SEPOLIA:
-      return "0xbd886FC0725Cc459b55BbFEb3E4278610331f83b";
-    case CHAIN_IDs.MODE:
-      return "0x3baD7AD0728f9917d1Bf08af5782dCbD516cDd96s";
+    case CHAIN_IDs.LISK:
+      return "0xeF684C38F94F48775959ECf2012D7E864ffb9dd4";
     default:
       return sdk.utils.getDeployedAddress("SpokePool", chainId);
   }
@@ -1441,6 +1440,7 @@ export function getDefaultRelayerAddress(
     return overrideForToken.relayer;
   } else {
     return (
+      defaultRelayerAddressOverridePerChain[destinationChainId] ||
       defaultRelayerAddressOverride ||
       sdk.constants.DEFAULT_SIMULATED_RELAYER_ADDRESS
     );

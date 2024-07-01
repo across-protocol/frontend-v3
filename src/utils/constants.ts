@@ -15,6 +15,7 @@ import zkSyncLogo from "assets/zksync-logo.svg";
 import baseLogo from "assets/base-logo.svg";
 import lineaLogo from "assets/linea-logo.svg";
 import modeLogo from "assets/mode-logo.svg";
+import liskLogo from "assets/lisk-logo.svg";
 import usdcLogo from "assets/usdc.svg";
 import daiLogo from "assets/dai.svg";
 import wbtcLogo from "assets/wbtc.svg";
@@ -24,6 +25,7 @@ import balLogo from "assets/bal.svg";
 import usdtLogo from "assets/usdt-logo.svg";
 import snxLogo from "assets/snx-logo.svg";
 import pooltogetherLogo from "assets/pooltogether-logo.svg";
+import lskLogo from "assets/lsk.svg";
 import unknownLogo from "assets/icons/question-circle.svg";
 import OPCloudBackground from "assets/bg-banners/op-cloud-rebate.svg";
 import ARBCloudBackground from "assets/bg-banners/arb-cloud-rebate.svg";
@@ -45,6 +47,7 @@ export enum ChainId {
   BASE = CHAIN_IDs.BASE,
   LINEA = CHAIN_IDs.LINEA,
   MODE = CHAIN_IDs.MODE,
+  LISK = CHAIN_IDs.LISK,
   // testnets
   SEPOLIA = CHAIN_IDs.SEPOLIA,
   BASE_SEPOLIA = CHAIN_IDs.BASE_SEPOLIA,
@@ -204,6 +207,20 @@ export const chainInfoList: ChainInfoList = [
     nativeCurrencySymbol: "ETH",
     pollingInterval: 10_000,
     customRpcUrl: process.env.REACT_APP_CHAIN_34443_PROVIDER_URL,
+  },
+  {
+    name: "Lisk",
+    fullName: "Lisk",
+    chainId: ChainId.LISK,
+    logoURI: liskLogo,
+    rpcUrl: "https://rpc.api.lisk.com",
+    explorerUrl: "https://blockscout.lisk.com",
+    constructExplorerLink: defaultConstructExplorerLink(
+      "https://blockscout.lisk.com"
+    ),
+    nativeCurrencySymbol: "ETH",
+    pollingInterval: 10_000,
+    customRpcUrl: process.env.REACT_APP_CHAIN_1135_PROVIDER_URL,
   },
   // testnets
   {
@@ -377,6 +394,7 @@ export const orderedTokenSymbolLogoMap = {
   BOBA: bobaLogo,
   OP: optimismLogo,
   ARB: arbitrumLogo,
+  LSK: lskLogo,
 };
 
 export const tokenList = [
