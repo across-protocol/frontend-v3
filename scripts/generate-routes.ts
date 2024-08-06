@@ -253,6 +253,26 @@ function transformChainConfigs(
           return ["WETH", "ETH"];
         }
 
+        // Handle WETH <-> ETH
+        if (tokenSymbol === "WETH") {
+          return [
+            "WETH",
+            {
+              inputTokenSymbol: "WETH",
+              outputTokenSymbol: "ETH",
+            },
+          ];
+        }
+        if (tokenSymbol === "ETH") {
+          return [
+            "ETH",
+            {
+              inputTokenSymbol: "ETH",
+              outputTokenSymbol: "WETH",
+            },
+          ];
+        }
+
         const chainIds =
           typeof token === "string" ? [toChainId] : token.chainIds;
 
@@ -453,6 +473,7 @@ function transformToRoute(
     fromTokenSymbol: inputTokenSymbol,
     toTokenSymbol: outputTokenSymbol,
     isNative: inputTokenSymbol === TOKEN_SYMBOLS_MAP.ETH.symbol,
+    toNative: outputTokenSymbol === TOKEN_SYMBOLS_MAP.ETH.symbol,
     l1TokenAddress: inputToken.l1TokenAddress,
   };
 }

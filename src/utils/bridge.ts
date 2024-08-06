@@ -7,7 +7,15 @@ import {
 } from "./constants";
 import { tagAcrossDomain, tagAddress } from "./format";
 import { getProvider } from "./providers";
-import { getConfig, getCurrentTime, isContractDeployedToAddress } from "utils";
+import {
+  getConfig,
+  getCurrentTime,
+  isContractDeployedToAddress,
+  isWeth,
+  WETH_INTERFACE,
+  getMulticallHandlerAddress,
+  getWethAddressForChain,
+} from "utils";
 import getApiEndpoint from "./serverless-api";
 import { BridgeLimitInterface } from "./serverless-api/types";
 import { DepositNetworkMismatchProperties } from "ampli";
@@ -138,6 +146,7 @@ export type AcrossDepositArgs = {
   maxCount?: ethers.BigNumber;
   referrer?: string;
   isNative: boolean;
+  toNative: boolean;
 };
 
 export type AcrossDepositV3Args = AcrossDepositArgs & {
@@ -171,12 +180,29 @@ export async function sendSpokePoolVerifierDepositTx(
     timestamp: quoteTimestamp,
     message = "0x",
     isNative,
+    toNative = false,
     referrer,
   }: AcrossDepositArgs,
   spokePool: SpokePool,
   spokePoolVerifier: SpokePoolVerifier,
   onNetworkMismatch?: NetworkMismatchHandler
 ): Promise<ethers.providers.TransactionResponse> {
+  /* We cannot send WETH to the recipient on the destination chain with the spoke pool verifier until
+   * we update the spoke pool verifier deployment to use depositV3.
+  if (isWeth(outputTokenAddress) && !toNative) {
+    message = wrapAndTransferMessage(
+      outputAmount,
+      recipient,
+      destinationChainId
+    );
+    recipient = getMulticallHandlerAddress(destinationChainId);
+    if (!recipient) {
+      throw new Error(
+        `No multicall handler deployed to chain ${destinationChainId}. Unable to receive WETH at destination`
+      );
+    }
+  }
+  */
   const tx = await spokePoolVerifier.populateTransaction.deposit(
     spokePool.address,
     recipient,
@@ -211,6 +237,7 @@ export async function sendDepositV3Tx(
     timestamp: quoteTimestamp,
     message = "0x",
     isNative,
+    toNative = false,
     referrer,
     fillDeadline,
     inputTokenAddress,
@@ -229,6 +256,23 @@ export async function sendDepositV3Tx(
   fillDeadline ??=
     getCurrentTime() - 60 + (await spokePool.fillDeadlineBuffer());
 
+  // If a user is interacting with the front end, assume that they are an EOA and not
+  // a contract. Since they are an EOA, by default they will receive ETH on the destination
+  // (except for Polygon). Therefore, we only need to use the multicall handler when the EOA
+  // wants to receive WETH after an ETH or WETH deposit.
+  if (isWeth(outputTokenAddress) && !toNative) {
+    message = wrapAndTransferMessage(
+      outputAmount,
+      recipient,
+      destinationChainId
+    );
+    recipient = getMulticallHandlerAddress(destinationChainId);
+    if (!recipient) {
+      throw new Error(
+        `No multicall handler deployed to chain ${destinationChainId}. Unable to receive WETH at destination.`
+      );
+    }
+  }
   const tx = await spokePool.populateTransaction.depositV3(
     await signer.getAddress(),
     recipient,
@@ -438,4 +482,33 @@ async function _tagRefAndSignTx(
   }
 
   return signer.sendTransaction(tx);
+}
+
+const INSTRUCTIONS = "tuple(tuple(address, bytes, uint256)[], address)";
+
+function wrapAndTransferMessage(
+  amount: ethers.BigNumber,
+  toAddress: string,
+  toChain: ChainId
+): string {
+  const encoder = ethers.utils.defaultAbiCoder;
+  const wethInterface = new ethers.utils.Interface(WETH_INTERFACE);
+
+  const outputTokenAddress = getWethAddressForChain(toChain);
+  const data = wethInterface.encodeFunctionData(
+    "transfer(address dst, uint256 wad)",
+    [toAddress, amount]
+  );
+  const call = encoder.encode(
+    [INSTRUCTIONS],
+    [
+      [
+        [
+          [outputTokenAddress, data, 0], // Transfer WETH
+        ],
+        toAddress,
+      ],
+    ]
+  );
+  return call;
 }

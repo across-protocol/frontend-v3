@@ -268,6 +268,7 @@ type DepositArgs = {
   relayerFeePct: BigNumber;
   tokenAddress: string;
   isNative: boolean;
+  toNative: boolean;
   toAddress: string;
 };
 function getDepositArgs(
@@ -298,6 +299,7 @@ function getDepositArgs(
     relayerFeePct: quotedFees.totalRelayFee.pct,
     tokenAddress: selectedRoute.fromTokenAddress,
     isNative: selectedRoute.isNative,
+    toNative: selectedRoute.toNative,
     toAddress: recipient,
   };
 }
