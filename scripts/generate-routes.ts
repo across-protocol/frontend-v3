@@ -27,6 +27,7 @@ const enabledMainnetChainConfigs = [
   chainConfigs.BLAST,
   chainConfigs.LISK,
   chainConfigs.SCROLL,
+  chainConfigs.REDSTONE,
 ];
 
 const enabledSepoliaChainConfigs = [
@@ -72,6 +73,7 @@ const enabledRoutes = {
         CHAIN_IDs.MODE,
         CHAIN_IDs.BLAST,
         CHAIN_IDs.LISK,
+        CHAIN_IDs.REDSTONE,
         CHAIN_IDs.SCROLL,
       ],
     },
